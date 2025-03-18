@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Génération de Certificats - Système de Gestion Scolaire</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            background-color: white;
+        }
+        
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 0.35rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .certificate-preview {
+            border: 1px solid #ddd;
+            padding: 20px;
+            min-height: 500px;
+            background-color: white;
+            position: relative;
+        }
+        
+        .certificate-content {
+            padding: 30px;
+            position: relative;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .certificate-body {
+            font-size: 1.1em;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        
+        .certificate-footer {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .signature-area {
+            text-align: center;
+            width: 40%;
+        }
+        
+        .signature-line {
+            border-top: 1px solid #000;
+            margin-bottom: 10px;
+        }
+        
+        .certificate-stamp {
+            position: absolute;
+            bottom: 100px;
+            right: 80px;
+            width: 120px;
+            height: 120px;
+            opacity: 0.7;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="demo_marketing.html">
+                <i class="fas fa-school text-primary me-2"></i>
+                <span class="fw-bold">Lycée Mamadou Sarr</span>
+            </a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-2 d-none d-lg-inline text-gray-600 small">Admin Demo</span>
+                        <img class="img-profile rounded-circle" width="32" height="32" src="https://via.placeholder.com/32x32">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                            Profil
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
+                            Paramètres
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="login_demo.html">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                            Déconnexion
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <a href="demo_marketing.html" class="back-link">
+            <i class="fas fa-arrow-left me-2"></i>Retour au tableau de bord
+        </a>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Générer un certificat</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="certificateForm">
+                            <div class="mb-3">
+                                <label for="typeCertificat" class="form-label">Type de certificat</label>
+                                <select class="form-select" id="typeCertificat" required>
+                                    <option value="" selected disabled>Choisir...</option>
+                                    <option value="scolarite">Certificat de scolarité</option>
+                                    <option value="reussite">Attestation de réussite</option>
+                                    <option value="frequentation">Certificat de fréquentation</option>
+                                    <option value="radiation">Certificat de radiation</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="eleve" class="form-label">Élève</label>
+                                <select class="form-select" id="eleve" required>
+                                    <option value="" selected disabled>Choisir un élève...</option>
+                                    <option value="1">DIALLO Aminata - Terminale A</option>
+                                    <option value="2">KOUYATE Mamadou - Terminale A</option>
+                                    <option value="3">TOURE Fatoumata - Terminale B</option>
+                                    <option value="4">CAMARA Ibrahim - Terminale C</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="anneeScolaire" class="form-label">Année scolaire</label>
+                                <select class="form-select" id="anneeScolaire" required>
+                                    <option value="2022-2023" selected>2022-2023</option>
+                                    <option value="2021-2022">2021-2022</option>
+                                    <option value="2020-2021">2020-2021</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dateCertificat" class="form-label">Date du certificat</label>
+                                <input type="date" class="form-control" id="dateCertificat" value="2023-05-15" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="signataire" class="form-label">Signataire</label>
+                                <select class="form-select" id="signataire" required>
+                                    <option value="directeur" selected>Directeur de l'établissement</option>
+                                    <option value="adjoint">Directeur adjoint</option>
+                                    <option value="secretaire">Secrétaire principal</option>
+                                </select>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="button" id="genererBtn" class="btn btn-primary">
+                                    <i class="fas fa-certificate me-1"></i>Générer le certificat
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Historique des certificats</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Certificat de scolarité</h6>
+                                    <small>10/05/2023</small>
+                                </div>
+                                <p class="mb-1">DIALLO Aminata - Terminale A</p>
+                                <small class="text-muted">Généré par: Admin Demo</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Attestation de réussite</h6>
+                                    <small>15/06/2022</small>
+                                </div>
+                                <p class="mb-1">KOUYATE Mamadou - Terminale A</p>
+                                <small class="text-muted">Généré par: Admin Demo</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Certificat de radiation</h6>
+                                    <small>03/09/2022</small>
+                                </div>
+                                <p class="mb-1">CAMARA Ibrahim - Terminale C</p>
+                                <small class="text-muted">Généré par: Admin Demo</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Aperçu du certificat</h5>
+                        <div>
+                            <button class="btn btn-outline-primary me-2" id="printBtn">
+                                <i class="fas fa-print me-1"></i>Imprimer
+                            </button>
+                            <button class="btn btn-outline-success" id="downloadBtn">
+                                <i class="fas fa-download me-1"></i>Télécharger
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="certificate-preview">
+                            <div class="certificate-content">
+                                <div class="certificate-header">
+                                    <h2>LYCÉE MAMADOU SARR</h2>
+                                    <p>123 Rue de l'Éducation, Bamako, Mali<br>
+                                    Téléphone: +223 20 22 33 44 | Email: contact@lyceemamadousarr.edu.ml</p>
+                                    <h3 class="mt-4">CERTIFICAT DE SCOLARITÉ</h3>
+                                </div>
+                                <div class="certificate-body">
+                                    <p>Je soussigné, <strong>M. Amadou DIOP</strong>, Directeur du Lycée Mamadou Sarr, certifie que l'élève :</p>
+                                    
+                                    <p class="text-center my-4">
+                                        <strong>Mademoiselle DIALLO Aminata</strong><br>
+                                        Née le 15 mars 2005 à Bamako<br>
+                                        Matricule : MAM2023002
+                                    </p>
+                                    
+                                    <p>Est régulièrement inscrite dans notre établissement pour l'année scolaire 2022-2023 en classe de Terminale A (Littéraire).</p>
+                                    
+                                    <p>Ce certificat est délivré à l'intéressée pour servir et valoir ce que de droit.</p>
+                                </div>
+                                <div class="certificate-footer">
+                                    <div class="date-area">
+                                        <p>Fait à Bamako, le 15 mai 2023</p>
+                                    </div>
+                                    <div class="signature-area">
+                                        <div class="signature-line"></div>
+                                        <p>Le Directeur</p>
+                                    </div>
+                                </div>
+                                <img src="https://via.placeholder.com/120x120?text=STAMP" alt="Tampon" class="certificate-stamp">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript pour la démo -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fonctionnalité d'impression
+            document.getElementById('printBtn').addEventListener('click', function() {
+                window.print();
+            });
+            
+            // Simuler la génération d'un certificat
+            document.getElementById('genererBtn').addEventListener('click', function() {
+                const typeCertificat = document.getElementById('typeCertificat').value;
+                const eleve = document.getElementById('eleve').options[document.getElementById('eleve').selectedIndex].text;
+                
+                alert(`Le certificat de type "${typeCertificat}" a été généré pour l'élève "${eleve}".`);
+            });
+        });
+    </script>
+</body>
+</html> 

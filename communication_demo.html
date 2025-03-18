@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communication - Système de Gestion Scolaire</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            background-color: white;
+        }
+        
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 0.35rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .message-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .message-list-item {
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .message-list-item:hover {
+            background-color: #f8f9fc;
+            cursor: pointer;
+        }
+        
+        .message-list-item.active {
+            border-left-color: var(--primary-color);
+            background-color: #f8f9fc;
+        }
+        
+        .message-list-item.unread {
+            font-weight: 600;
+        }
+        
+        .message-list-item.unread::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            margin-left: 5px;
+        }
+        
+        .message-body {
+            min-height: 300px;
+            background-color: white;
+            border: 1px solid #e3e6f0;
+            border-radius: 0.35rem;
+            padding: 1.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #224abe;
+            border-color: #224abe;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="demo_marketing.html">
+                <i class="fas fa-school text-primary me-2"></i>
+                <span class="fw-bold">Lycée Demo</span>
+            </a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-2 d-none d-lg-inline text-gray-600 small">Admin Demo</span>
+                        <img class="img-profile rounded-circle" width="32" height="32" src="https://via.placeholder.com/32x32">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                            Profil
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
+                            Paramètres
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="login_demo.html">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                            Déconnexion
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <a href="demo_marketing.html" class="back-link mb-4">
+            <i class="fas fa-arrow-left me-1"></i>Retour au tableau de bord
+        </a>
+        
+        <h1 class="h3 mb-4 text-gray-800">Communication</h1>
+        
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Messages</h5>
+                        <div>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newMessageModal">
+                                <i class="fas fa-plus me-1"></i>Nouveau message
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm ms-2">
+                                <i class="fas fa-envelope me-1"></i>SMS groupé
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <div class="col-md-4 border-end">
+                                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Boîte de réception</h6>
+                                    <span class="badge bg-primary rounded-pill">3</span>
+                                </div>
+                                <div class="message-list">
+                                    <div class="message-list-item active p-3 border-bottom">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>Mme DIALLO (Parent)</strong>
+                                            <small>Aujourd'hui</small>
+                                        </div>
+                                        <div>Re: Demande de rendez-vous</div>
+                                        <small class="text-muted">Je vous remercie pour votre disponibilité...</small>
+                                    </div>
+                                    <div class="message-list-item unread p-3 border-bottom">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>M. TOURE (Parent)</strong>
+                                            <small>Hier</small>
+                                        </div>
+                                        <div>Absence prolongée</div>
+                                        <small class="text-muted">Je souhaite vous informer que mon fils...</small>
+                                    </div>
+                                    <div class="message-list-item unread p-3 border-bottom">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>Mme CAMARA (Parent)</strong>
+                                            <small>18/05/2023</small>
+                                        </div>
+                                        <div>Problème de transport</div>
+                                        <small class="text-muted">Suite aux récents travaux dans le quartier...</small>
+                                    </div>
+                                    <div class="message-list-item p-3 border-bottom">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>M. KEITA (Parent)</strong>
+                                            <small>15/05/2023</small>
+                                        </div>
+                                        <div>Récupération de bulletin</div>
+                                        <small class="text-muted">Je ne pourrai pas assister à la remise...</small>
+                                    </div>
+                                    <div class="message-list-item unread p-3 border-bottom">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>Mme TRAORE (Parent)</strong>
+                                            <small>12/05/2023</small>
+                                        </div>
+                                        <div>Question sur le programme</div>
+                                        <small class="text-muted">Pourriez-vous m'éclairer sur le contenu...</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">Re: Demande de rendez-vous</h6>
+                                        <small class="text-muted">De: Mme DIALLO (Parent de DIALLO Aminata) - Aujourd'hui à 10:23</small>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="fas fa-reply me-1"></i>Répondre
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-print me-1"></i>Imprimer
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="message-body mb-4">
+                                        <p>Bonjour Monsieur le Proviseur,</p>
+                                        
+                                        <p>Je vous remercie pour votre disponibilité concernant ma demande de rendez-vous. La date du 25 mai à 15h me convient parfaitement.</p>
+                                        
+                                        <p>J'aimerais discuter des résultats récents de ma fille Aminata et des possibilités d'orientation pour l'année prochaine.</p>
+                                        
+                                        <p>Cordialement,</p>
+                                        
+                                        <p>Mme DIALLO Fatoumata<br>
+                                        Parent de DIALLO Aminata (Terminale A)<br>
+                                        Tél: 77 123 45 67</p>
+                                    </div>
+                                    
+                                    <div class="card mb-3 bg-light">
+                                        <div class="card-header bg-light">
+                                            <small class="text-muted">Message précédent - 18/05/2023 à 14:45</small>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>Bonjour Madame DIALLO,</p>
+                                            
+                                            <p>Suite à votre demande de rendez-vous, je serais disponible le jeudi 25 mai à 15h.</p>
+                                            
+                                            <p>Merci de me confirmer si cette date vous convient.</p>
+                                            
+                                            <p>Cordialement,</p>
+                                            
+                                            <p>M. TOURÉ Amadou<br>
+                                            Proviseur<br>
+                                            Lycée Demo</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <button class="btn btn-primary">
+                                            <i class="fas fa-reply me-1"></i>Répondre
+                                        </button>
+                                        <button class="btn btn-outline-secondary ms-2">
+                                            <i class="fas fa-archive me-1"></i>Archiver
+                                        </button>
+                                        <button class="btn btn-outline-danger ms-2">
+                                            <i class="fas fa-trash-alt me-1"></i>Supprimer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal pour nouveau message -->
+    <div class="modal fade" id="newMessageModal" tabindex="-1" aria-labelledby="newMessageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newMessageModalLabel">Nouveau message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Destinataire</label>
+                            <select class="form-select" required>
+                                <option value="" selected disabled>Sélectionner un destinataire</option>
+                                <optgroup label="Parents">
+                                    <option>Tous les parents</option>
+                                    <option>Parents - Terminale A</option>
+                                    <option>Parents - Terminale B</option>
+                                    <option>DIALLO Fatoumata (Parent de DIALLO Aminata)</option>
+                                    <option>TOURE Ibrahim (Parent de TOURE Mamadou)</option>
+                                    <option>CAMARA Mariam (Parent de CAMARA Ibrahim)</option>
+                                </optgroup>
+                                <optgroup label="Personnel">
+                                    <option>Tous les professeurs</option>
+                                    <option>Administration</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sujet</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" rows="6" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Pièce jointe (optionnelle)</label>
+                            <input type="file" class="form-control">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="sendSms">
+                            <label class="form-check-label" for="sendSms">Envoyer également par SMS</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Envoyer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

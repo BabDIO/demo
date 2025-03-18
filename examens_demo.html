@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Examens - Système de Gestion Scolaire</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page des examens */
+        .status-badge {
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-upcoming {
+            background-color: rgba(78, 115, 223, 0.15);
+            color: #4e73df;
+        }
+        
+        .status-ongoing {
+            background-color: rgba(246, 194, 62, 0.15);
+            color: #f6c23e;
+        }
+        
+        .status-completed {
+            background-color: rgba(28, 200, 138, 0.15);
+            color: #1cc88a;
+        }
+        
+        .status-archived {
+            background-color: rgba(133, 135, 150, 0.15);
+            color: #858796;
+        }
+    </style>
+</head>
+<body>
+    <!-- Inclure le header -->
+    <div id="header-placeholder"></div>
+
+    <a href="demo_marketing.html" class="back-link mb-4">
+        <i class="fas fa-arrow-left me-1"></i>Retour au tableau de bord
+    </a>
+
+    <h1 class="h3 mb-4 text-gray-800">Gestion des Examens</h1>
+
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Examens à venir</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">4</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Examens en cours</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">2</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-pen fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Examens terminés</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Taux de réussite moyen</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">72%</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Liste des examens</h5>
+                    <div>
+                        <button class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i>Nouvel examen
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Nom de l'examen</th>
+                                    <th>Classe</th>
+                                    <th>Date</th>
+                                    <th>Matière</th>
+                                    <th>Durée</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Examen final Mathématiques</td>
+                                    <td>Terminale A</td>
+                                    <td>12/06/2023</td>
+                                    <td>Mathématiques</td>
+                                    <td>3h</td>
+                                    <td><span class="status-badge status-upcoming">À venir</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Devoir surveillé Français</td>
+                                    <td>Terminale A, B, C</td>
+                                    <td>05/06/2023</td>
+                                    <td>Français</td>
+                                    <td>2h</td>
+                                    <td><span class="status-badge status-upcoming">À venir</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Examen final Histoire-Géo</td>
+                                    <td>Première A</td>
+                                    <td>01/06/2023</td>
+                                    <td>Histoire-Géographie</td>
+                                    <td>4h</td>
+                                    <td><span class="status-badge status-ongoing">En cours</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Devoir surveillé Physique</td>
+                                    <td>Terminale C</td>
+                                    <td>31/05/2023</td>
+                                    <td>Physique-Chimie</td>
+                                    <td>2h</td>
+                                    <td><span class="status-badge status-ongoing">En cours</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Examen trimestriel Anglais</td>
+                                    <td>Terminale A, B</td>
+                                    <td>25/05/2023</td>
+                                    <td>Anglais</td>
+                                    <td>2h</td>
+                                    <td><span class="status-badge status-completed">Terminé</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inclure le footer -->
+    <div id="footer-placeholder"></div>
+
+    <script src="demo_include.js"></script>
+</body>
+</html> 

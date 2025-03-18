@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Cartes Scolaires - Système de Gestion Scolaire</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            background-color: white;
+        }
+        
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 0.35rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #224abe;
+            border-color: #224abe;
+        }
+        
+        .school-card {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        
+        .school-card .card-header {
+            color: white;
+            padding: 10px;
+        }
+        
+        .student-photo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .qr-code {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .preview-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+        
+        .card-color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .card-color-preview.active {
+            border-color: black;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="demo_marketing.html">
+                <i class="fas fa-school text-primary me-2"></i>
+                <span class="fw-bold">Lycée Demo</span>
+            </a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-2 d-none d-lg-inline text-gray-600 small">Admin Demo</span>
+                        <img class="img-profile rounded-circle" width="32" height="32" src="https://via.placeholder.com/32x32">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                            Profil
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
+                            Paramètres
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="login_demo.html">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                            Déconnexion
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <a href="demo_marketing.html" class="back-link mb-4">
+            <i class="fas fa-arrow-left me-1"></i>Retour au tableau de bord
+        </a>
+        
+        <h1 class="h3 mb-4 text-gray-800">Générateur de Cartes Scolaires</h1>
+        
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Configuration des cartes</h5>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="studentSelect" class="form-label">Élève</label>
+                                <select class="form-select" id="studentSelect">
+                                    <option selected>Sélectionner un élève</option>
+                                    <option>DIALLO Aminata (MAM2023002)</option>
+                                    <option>TRAORE Fatoumata (MAM2023004)</option>
+                                    <option>CAMARA Ibrahim (MAM2023008)</option>
+                                    <option>TOURE Mamadou (MAM2023012)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="photoUpload" class="form-label">Photo d'identité</label>
+                                <input type="file" class="form-control" id="photoUpload">
+                                <div class="form-text">Format JPG/PNG, max 2MB</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Couleur de la carte</label>
+                                <div>
+                                    <span class="card-color-preview active" style="background-color: #4e73df;" data-color="#4e73df"></span>
+                                    <span class="card-color-preview" style="background-color: #1cc88a;" data-color="#1cc88a"></span>
+                                    <span class="card-color-preview" style="background-color: #f6c23e;" data-color="#f6c23e"></span>
+                                    <span class="card-color-preview" style="background-color: #e74a3b;" data-color="#e74a3b"></span>
+                                    <span class="card-color-preview" style="background-color: #36b9cc;" data-color="#36b9cc"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="cardYear" class="form-label">Année Scolaire</label>
+                                <select class="form-select" id="cardYear">
+                                    <option selected>2023-2024</option>
+                                    <option>2022-2023</option>
+                                    <option>2021-2022</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="expiryDate" class="form-label">Date d'expiration</label>
+                                <input type="date" class="form-control" id="expiryDate" value="2024-06-30">
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="qrCodeCheck" checked>
+                                <label class="form-check-label" for="qrCodeCheck">Inclure un QR code</label>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-primary" id="generateBtn">
+                                    <i class="fas fa-id-card me-1"></i>Générer la carte
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Options d'impression</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="printFormat" class="form-label">Format d'impression</label>
+                            <select class="form-select" id="printFormat">
+                                <option selected>Carte individuelle</option>
+                                <option>Multiple (4 par page)</option>
+                                <option>Multiple (8 par page)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cardQuality" class="form-label">Qualité d'impression</label>
+                            <select class="form-select" id="cardQuality">
+                                <option selected>Haute (300 DPI)</option>
+                                <option>Moyenne (200 DPI)</option>
+                                <option>Basse (150 DPI)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="doubleSidedCheck">
+                            <label class="form-check-label" for="doubleSidedCheck">Impression recto-verso</label>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button class="btn btn-success" id="printBtn">
+                                <i class="fas fa-print me-1"></i>Imprimer
+                            </button>
+                            <button class="btn btn-outline-primary" id="downloadBtn">
+                                <i class="fas fa-download me-1"></i>Télécharger PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Aperçu de la carte</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="preview-container p-4">
+                            <div class="school-card">
+                                <div class="card-header text-center" style="background-color: #4e73df;">
+                                    <h5 class="mb-0">LYCÉE DEMO</h5>
+                                    <small>Carte d'identité scolaire - 2023/2024</small>
+                                </div>
+                                <div class="card-body">
+                                    <div class="student-photo mb-3">
+                                        <img src="https://via.placeholder.com/150" alt="Photo de l'élève" class="rounded">
+                                    </div>
+                                    
+                                    <h5 class="card-title text-center mb-3">DIALLO Aminata</h5>
+                                    
+                                    <div class="mb-3">
+                                        <table class="table table-borderless table-sm">
+                                            <tr>
+                                                <th>Matricule:</th>
+                                                <td>MAM2023002</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Classe:</th>
+                                                <td>Terminale A</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Date de naissance:</th>
+                                                <td>15/03/2005</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Lieu de naissance:</th>
+                                                <td>Bamako</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="qr-code mt-2">
+                                        <img src="https://via.placeholder.com/100" alt="QR Code">
+                                    </div>
+                                </div>
+                                <div class="card-footer p-2 d-flex justify-content-between">
+                                    <div class="small">
+                                        <div>www.lyceemamadousarr.edu.ml</div>
+                                        <div>Tel: +223 20 22 33 44</div>
+                                    </div>
+                                    <div class="small">
+                                        Expire le: 30/06/2024
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Cartes récemment générées</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                                <img src="https://via.placeholder.com/48" alt="Photo" class="rounded-circle flex-shrink-0">
+                                <div class="d-flex gap-2 w-100 justify-content-between">
+                                    <div>
+                                        <h6 class="mb-0">TRAORE Fatoumata</h6>
+                                        <p class="mb-0 opacity-75">Terminale A - MAM2023004</p>
+                                    </div>
+                                    <small class="opacity-50 text-nowrap">Aujourd'hui</small>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                                <img src="https://via.placeholder.com/48" alt="Photo" class="rounded-circle flex-shrink-0">
+                                <div class="d-flex gap-2 w-100 justify-content-between">
+                                    <div>
+                                        <h6 class="mb-0">CAMARA Ibrahim</h6>
+                                        <p class="mb-0 opacity-75">Terminale B - MAM2023008</p>
+                                    </div>
+                                    <small class="opacity-50 text-nowrap">Hier</small>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                                <img src="https://via.placeholder.com/48" alt="Photo" class="rounded-circle flex-shrink-0">
+                                <div class="d-flex gap-2 w-100 justify-content-between">
+                                    <div>
+                                        <h6 class="mb-0">TOURE Mamadou</h6>
+                                        <p class="mb-0 opacity-75">Terminale C - MAM2023012</p>
+                                    </div>
+                                    <small class="opacity-50 text-nowrap">Il y a 3 jours</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript pour la démo -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Changer la couleur de la carte
+            const colorPreviews = document.querySelectorAll('.card-color-preview');
+            const cardHeader = document.querySelector('.school-card .card-header');
+            
+            colorPreviews.forEach(preview => {
+                preview.addEventListener('click', function() {
+                    // Mise à jour visuelle
+                    colorPreviews.forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Appliquer la couleur choisie
+                    const color = this.getAttribute('data-color');
+                    cardHeader.style.backgroundColor = color;
+                });
+            });
+            
+            // Simuler la génération de carte
+            document.getElementById('generateBtn').addEventListener('click', function() {
+                const student = document.getElementById('studentSelect').value;
+                if (student === 'Sélectionner un élève') {
+                    alert('Veuillez sélectionner un élève.');
+                    return;
+                }
+                
+                alert('Carte générée avec succès pour ' + student);
+            });
+            
+            // Boutons d'impression et téléchargement
+            document.getElementById('printBtn').addEventListener('click', function() {
+                window.print();
+            });
+            
+            document.getElementById('downloadBtn').addEventListener('click', function() {
+                alert('Le PDF de la carte a été téléchargé.');
+            });
+        });
+    </script>
+</body>
+</html>

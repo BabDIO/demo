@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emploi du Temps - Système de Gestion Scolaire</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à la page d'emploi du temps */
+        .timetable-grid th, .timetable-grid td {
+            min-width: 150px;
+            height: 60px;
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 0.25rem;
+        }
+        
+        .timetable-slot {
+            background-color: #f8f9fc;
+            border-radius: 4px;
+            padding: 0.35rem;
+            margin: 0.1rem;
+            border: 1px solid #e3e6f0;
+            height: 100%;
+        }
+        
+        .timetable-matiere {
+            font-weight: 600;
+            color: #4e73df;
+        }
+        
+        .timetable-prof {
+            font-size: 0.8rem;
+            color: #5a5c69;
+        }
+        
+        .timetable-salle {
+            font-size: 0.75rem;
+            color: #858796;
+        }
+        
+        .timetable-grid th {
+            background-color: #4e73df;
+            color: white;
+        }
+        
+        .timetable-grid th:first-child {
+            width: 80px;
+        }
+        
+        .subject-math {
+            background-color: rgba(78, 115, 223, 0.1);
+            border-color: rgba(78, 115, 223, 0.3);
+        }
+        
+        .subject-french {
+            background-color: rgba(28, 200, 138, 0.1);
+            border-color: rgba(28, 200, 138, 0.3);
+        }
+        
+        .subject-english {
+            background-color: rgba(246, 194, 62, 0.1);
+            border-color: rgba(246, 194, 62, 0.3);
+        }
+        
+        .subject-science {
+            background-color: rgba(54, 185, 204, 0.1);
+            border-color: rgba(54, 185, 204, 0.3);
+        }
+        
+        .subject-history {
+            background-color: rgba(231, 74, 59, 0.1);
+            border-color: rgba(231, 74, 59, 0.3);
+        }
+        
+        .subject-sport {
+            background-color: rgba(133, 135, 150, 0.1);
+            border-color: rgba(133, 135, 150, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Inclure le header -->
+    <div id="header-placeholder"></div>
+
+    <a href="demo_marketing.html" class="back-link mb-4">
+        <i class="fas fa-arrow-left me-1"></i>Retour au tableau de bord
+    </a>
+
+    <h1 class="h3 mb-4 text-gray-800">Gestion des emplois du temps</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Emploi du temps - Terminale A</h5>
+                    <div>
+                        <button class="btn btn-primary btn-sm me-2">
+                            <i class="fas fa-print me-1"></i>Imprimer
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-edit me-1"></i>Modifier
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-2">
+                    <div class="table-responsive">
+                        <table class="table table-bordered timetable-grid">
+                            <thead>
+                                <tr>
+                                    <th>Heures</th>
+                                    <th>Lundi</th>
+                                    <th>Mardi</th>
+                                    <th>Mercredi</th>
+                                    <th>Jeudi</th>
+                                    <th>Vendredi</th>
+                                    <th>Samedi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>8h-9h</td>
+                                    <td>
+                                        <div class="timetable-slot subject-math">
+                                            <div class="timetable-matiere">Mathématiques</div>
+                                            <div class="timetable-prof">M. DIALLO</div>
+                                            <div class="timetable-salle">Salle 201</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-french">
+                                            <div class="timetable-matiere">Français</div>
+                                            <div class="timetable-prof">Mme TOURE</div>
+                                            <div class="timetable-salle">Salle 103</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-science">
+                                            <div class="timetable-matiere">SVT</div>
+                                            <div class="timetable-prof">M. CAMARA</div>
+                                            <div class="timetable-salle">Labo 2</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-english">
+                                            <div class="timetable-matiere">Anglais</div>
+                                            <div class="timetable-prof">Mme BALDE</div>
+                                            <div class="timetable-salle">Salle 104</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-history">
+                                            <div class="timetable-matiere">Histoire-Géo</div>
+                                            <div class="timetable-prof">M. KEITA</div>
+                                            <div class="timetable-salle">Salle 305</div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>9h-10h</td>
+                                    <td>
+                                        <div class="timetable-slot subject-math">
+                                            <div class="timetable-matiere">Mathématiques</div>
+                                            <div class="timetable-prof">M. DIALLO</div>
+                                            <div class="timetable-salle">Salle 201</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-french">
+                                            <div class="timetable-matiere">Français</div>
+                                            <div class="timetable-prof">Mme TOURE</div>
+                                            <div class="timetable-salle">Salle 103</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-science">
+                                            <div class="timetable-matiere">SVT</div>
+                                            <div class="timetable-prof">M. CAMARA</div>
+                                            <div class="timetable-salle">Labo 2</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-english">
+                                            <div class="timetable-matiere">Anglais</div>
+                                            <div class="timetable-prof">Mme BALDE</div>
+                                            <div class="timetable-salle">Salle 104</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-history">
+                                            <div class="timetable-matiere">Histoire-Géo</div>
+                                            <div class="timetable-prof">M. KEITA</div>
+                                            <div class="timetable-salle">Salle 305</div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>10h-11h</td>
+                                    <td>
+                                        <div class="timetable-slot subject-history">
+                                            <div class="timetable-matiere">Histoire-Géo</div>
+                                            <div class="timetable-prof">M. KEITA</div>
+                                            <div class="timetable-salle">Salle 305</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-english">
+                                            <div class="timetable-matiere">Anglais</div>
+                                            <div class="timetable-prof">Mme BALDE</div>
+                                            <div class="timetable-salle">Salle 104</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-french">
+                                            <div class="timetable-matiere">Philosophie</div>
+                                            <div class="timetable-prof">M. SOW</div>
+                                            <div class="timetable-salle">Salle 102</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-math">
+                                            <div class="timetable-matiere">Mathématiques</div>
+                                            <div class="timetable-prof">M. DIALLO</div>
+                                            <div class="timetable-salle">Salle 201</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-science">
+                                            <div class="timetable-matiere">Physique-Chimie</div>
+                                            <div class="timetable-prof">Mme DIOP</div>
+                                            <div class="timetable-salle">Labo 1</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-sport">
+                                            <div class="timetable-matiere">EPS</div>
+                                            <div class="timetable-prof">M. BARRY</div>
+                                            <div class="timetable-salle">Terrain</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>11h-12h</td>
+                                    <td>
+                                        <div class="timetable-slot subject-history">
+                                            <div class="timetable-matiere">Histoire-Géo</div>
+                                            <div class="timetable-prof">M. KEITA</div>
+                                            <div class="timetable-salle">Salle 305</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-english">
+                                            <div class="timetable-matiere">Anglais</div>
+                                            <div class="timetable-prof">Mme BALDE</div>
+                                            <div class="timetable-salle">Salle 104</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-french">
+                                            <div class="timetable-matiere">Philosophie</div>
+                                            <div class="timetable-prof">M. SOW</div>
+                                            <div class="timetable-salle">Salle 102</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-math">
+                                            <div class="timetable-matiere">Mathématiques</div>
+                                            <div class="timetable-prof">M. DIALLO</div>
+                                            <div class="timetable-salle">Salle 201</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-science">
+                                            <div class="timetable-matiere">Physique-Chimie</div>
+                                            <div class="timetable-prof">Mme DIOP</div>
+                                            <div class="timetable-salle">Labo 1</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-sport">
+                                            <div class="timetable-matiere">EPS</div>
+                                            <div class="timetable-prof">M. BARRY</div>
+                                            <div class="timetable-salle">Terrain</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>14h-15h</td>
+                                    <td>
+                                        <div class="timetable-slot subject-science">
+                                            <div class="timetable-matiere">Physique-Chimie</div>
+                                            <div class="timetable-prof">Mme DIOP</div>
+                                            <div class="timetable-salle">Labo 1</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-sport">
+                                            <div class="timetable-matiere">EPS</div>
+                                            <div class="timetable-prof">M. BARRY</div>
+                                            <div class="timetable-salle">Terrain</div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <div class="timetable-slot subject-french">
+                                            <div class="timetable-matiere">Français</div>
+                                            <div class="timetable-prof">Mme TOURE</div>
+                                            <div class="timetable-salle">Salle 103</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-english">
+                                            <div class="timetable-matiere">Anglais</div>
+                                            <div class="timetable-prof">Mme BALDE</div>
+                                            <div class="timetable-salle">Salle 104</div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>15h-16h</td>
+                                    <td>
+                                        <div class="timetable-slot subject-science">
+                                            <div class="timetable-matiere">Physique-Chimie</div>
+                                            <div class="timetable-prof">Mme DIOP</div>
+                                            <div class="timetable-salle">Labo 1</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-sport">
+                                            <div class="timetable-matiere">EPS</div>
+                                            <div class="timetable-prof">M. BARRY</div>
+                                            <div class="timetable-salle">Terrain</div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <div class="timetable-slot subject-french">
+                                            <div class="timetable-matiere">Français</div>
+                                            <div class="timetable-prof">Mme TOURE</div>
+                                            <div class="timetable-salle">Salle 103</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="timetable-slot subject-english">
+                                            <div class="timetable-matiere">Anglais</div>
+                                            <div class="timetable-prof">Mme BALDE</div>
+                                            <div class="timetable-salle">Salle 104</div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Sélection rapide</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Classe</label>
+                        <select class="form-select">
+                            <option selected>Terminale A</option>
+                            <option>Terminale B</option>
+                            <option>Terminale C</option>
+                            <option>Première A</option>
+                            <option>Première B</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Semaine</label>
+                        <select class="form-select">
+                            <option selected>Semaine actuelle</option>
+                            <option>Semaine du 05/06/2023</option>
+                            <option>Semaine du 12/06/2023</option>
+                            <option>Semaine du 19/06/2023</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary w-100">Afficher</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Légende</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <span class="badge bg-primary">Mathématiques</span>
+                        <span class="ms-2">M. DIALLO</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge bg-success">Français</span>
+                        <span class="ms-2">Mme TOURE</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge bg-warning">Anglais</span>
+                        <span class="ms-2">Mme BALDE</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge bg-info">Sciences</span>
+                        <span class="ms-2">M. CAMARA, Mme DIOP</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge bg-danger">Histoire-Géo</span>
+                        <span class="ms-2">M. KEITA</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge bg-secondary">EPS</span>
+                        <span class="ms-2">M. BARRY</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inclure le footer -->
+    <div id="footer-placeholder"></div>
+
+    <script src="demo_include.js"></script>
+</body>
+</html> 

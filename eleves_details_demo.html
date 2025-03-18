@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'Élève - Système de Gestion Scolaire</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            background-color: white;
+        }
+        
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 0.35rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #224abe;
+            border-color: #224abe;
+        }
+        
+        .student-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+        
+        .student-header {
+            background: linear-gradient(to right, var(--primary-color), #224abe);
+            color: white;
+            padding: 2rem 0;
+            border-radius: 0.35rem 0.35rem 0 0;
+        }
+        
+        .text-info-item {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+        
+        .text-info-label {
+            width: 150px;
+            font-weight: 600;
+            color: #5a5c69;
+        }
+        
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+        }
+        
+        .nav-pills .nav-link {
+            color: #5a5c69;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: #e3e6f0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid var(--primary-color);
+        }
+        
+        .badge-success {
+            background-color: var(--secondary-color);
+        }
+        
+        .badge-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .badge-danger {
+            background-color: var(--danger-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="demo_marketing.html">
+                <i class="fas fa-school text-primary me-2"></i>
+                <span class="fw-bold">Lycée Demo</span>
+            </a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-2 d-none d-lg-inline text-gray-600 small">Admin Demo</span>
+                        <img class="img-profile rounded-circle" width="32" height="32" src="https://via.placeholder.com/32x32">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                            Profil
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
+                            Paramètres
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="login_demo.html">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                            Déconnexion
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <a href="demo_marketing.html" class="back-link mb-4">
+            <i class="fas fa-arrow-left me-1"></i>Retour à la liste des élèves
+        </a>
+        
+        <div class="card mb-4">
+            <div class="student-header text-center">
+                <img src="https://via.placeholder.com/150" alt="Photo d'identité" class="student-img mb-3">
+                <h1 class="h4 mb-1">DIALLO Aminata</h1>
+                <p class="mb-0">Terminale A - Matricule: MAM2023001</p>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Informations personnelles</h5>
+                        <div class="text-info-item">
+                            <div class="text-info-label">Date de naissance:</div>
+                            <div>05/03/2005 (18 ans)</div>
+                        </div>
+                        <div class="text-info-item">
+                            <div class="text-info-label">Lieu de naissance:</div>
+                            <div>Bamako, Mali</div>
+                        </div>
+                        <div class="text-info-item">
+                            <div class="text-info-label">Nationalité:</div>
+                            <div>Malienne</div>
+                        </div>
+                        <div class="text-info-item">
+                            <div class="text-info-label">Adresse:</div>
+                            <div>123 Rue Principale, Bamako</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Contacts</h5>
+                        <div class="text-info-item">
+                            <div class="text-info-label">Parent/Tuteur:</div>
+                            <div>DIALLO Fatoumata (Mère)</div>
+                        </div>
+                        <div class="text-info-item">
+                            <div class="text-info-label">Téléphone parent:</div>
+                            <div>+223 77 123 45 67</div>
+                        </div>
+                        <div class="text-info-item">
+                            <div class="text-info-label">Email parent:</div>
+                            <div>f.diallo@example.com</div>
+                        </div>
+                        <div class="text-info-item">
+                            <div class="text-info-label">Téléphone élève:</div>
+                            <div>+223 76 987 65 43</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <a href="bulletin_demo.html" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-file-alt me-1"></i>Bulletin scolaire
+                    </a>
+                    <a href="cartes_scolaires_demo.html" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-id-card me-1"></i>Générer carte scolaire
+                    </a>
+                    <a href="communication_demo.html" class="btn btn-outline-success">
+                        <i class="fas fa-envelope me-1"></i>Contacter les parents
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <ul class="nav nav-pills mb-3" id="student-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="notes-tab" data-bs-toggle="pill" data-bs-target="#notes" type="button" role="tab" aria-controls="notes" aria-selected="true">Notes</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="absences-tab" data-bs-toggle="pill" data-bs-target="#absences" type="button" role="tab" aria-controls="absences" aria-selected="false">Absences</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="comportement-tab" data-bs-toggle="pill" data-bs-target="#comportement" type="button" role="tab" aria-controls="comportement" aria-selected="false">Comportement</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="parcours-tab" data-bs-toggle="pill" data-bs-target="#parcours" type="button" role="tab" aria-controls="parcours" aria-selected="false">Parcours</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="documents-tab" data-bs-toggle="pill" data-bs-target="#documents" type="button" role="tab" aria-controls="documents" aria-selected="false">Documents</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="student-tabsContent">
+            <div class="tab-pane fade show active" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">Résultats par matière</h6>
+                                <div class="form-group mb-0">
+                                    <select class="form-select form-select-sm">
+                                        <option selected>Trimestre 2 (Actuel)</option>
+                                        <option>Trimestre 1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Matière</th>
+                                                <th>Moyenne</th>
+                                                <th>Rang</th>
+                                                <th>Appréciations</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Philosophie</td>
+                                                <td>16.5/20</td>
+                                                <td>1/35</td>
+                                                <td>Excellente participation</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Français</td>
+                                                <td>15.0/20</td>
+                                                <td>3/35</td>
+                                                <td>Très bon niveau</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Histoire-Géographie</td>
+                                                <td>14.5/20</td>
+                                                <td>5/35</td>
+                                                <td>Bon travail</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mathématiques</td>
+                                                <td>13.5/20</td>
+                                                <td>7/35</td>
+                                                <td>Progrès notables</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Anglais</td>
+                                                <td>16.0/20</td>
+                                                <td>2/35</td>
+                                                <td>Excellent niveau à l'oral</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sciences</td>
+                                                <td>13.0/20</td>
+                                                <td>10/35</td>
+                                                <td>Peut mieux faire</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="mb-0">Évolution des résultats</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="studentProgressChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="absences" role="tabpanel" aria-labelledby="absences-tab">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Historique des absences</h6>
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus me-1"></i>Ajouter une absence
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Statut</th>
+                                        <th>Motif</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>05/05/2023</td>
+                                        <td>Journée complète</td>
+                                        <td><span class="badge bg-success">Justifiée</span></td>
+                                        <td>Maladie (certificat médical)</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>12/04/2023</td>
+                                        <td>Demi-journée (après-midi)</td>
+                                        <td><span class="badge bg-success">Justifiée</span></td>
+                                        <td>Rendez-vous médical</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>03/03/2023</td>
+                                        <td>Journée complète</td>
+                                        <td><span class="badge bg-danger">Non justifiée</span></td>
+                                        <td>-</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="comportement" role="tabpanel" aria-labelledby="comportement-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">Incidents et remarques</h6>
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-plus me-1"></i>Ajouter
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="timeline">
+                                    <div class="timeline-item">
+                                        <div class="card mb-2">
+                                            <div class="card-body py-2">
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <strong>09/05/2023</strong>
+                                                    <span class="badge bg-success">Positif</span>
+                                                </div>
+                                                <p class="mb-0">Participation remarquable au débat philosophique.</p>
+                                                <small class="text-muted">Noté par: M. TOURE (Philosophie)</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="card mb-2">
+                                            <div class="card-body py-2">
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <strong>20/04/2023</strong>
+                                                    <span class="badge bg-warning">Avertissement</span>
+                                                </div>
+                                                <p class="mb-0">Bavardages répétés en cours de mathématiques.</p>
+                                                <small class="text-muted">Noté par: M. DIOP (Mathématiques)</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="card mb-2">
+                                            <div class="card-body py-2">
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <strong>15/03/2023</strong>
+                                                    <span class="badge bg-success">Positif</span>
+                                                </div>
+                                                <p class="mb-0">A aidé volontairement à organiser la salle pour le conseil de classe.</p>
+                                                <small class="text-muted">Noté par: Mme BALDE (CPE)</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Appréciations générales</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Trimestre 2 (en cours)</h6>
+                                    <p>Élève sérieuse et appliquée. Participe activement en cours et montre une grande motivation. Quelques bavardages à surveiller, mais l'ensemble est très satisfaisant.</p>
+                                </div>
+                                <div>
+                                    <h6>Trimestre 1</h6>
+                                    <p>Bon début d'année pour Aminata qui s'est bien intégrée dans sa classe. Travail régulier et de qualité. Nous l'encourageons à poursuivre ses efforts.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="parcours" role="tabpanel" aria-labelledby="parcours-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Parcours scolaire</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Année</th>
+                                        <th>Classe</th>
+                                        <th>Établissement</th>
+                                        <th>Moyenne</th>
+                                        <th>Rang</th>
+                                        <th>Mention</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2022-2023</td>
+                                        <td>Terminale A</td>
+                                        <td>Lycée Demo</td>
+                                        <td>15.2/20</td>
+                                        <td>2/35</td>
+                                        <td><span class="badge bg-success">Bien</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2021-2022</td>
+                                        <td>Première A</td>
+                                        <td>Lycée Demo</td>
+                                        <td>14.8/20</td>
+                                        <td>3/37</td>
+                                        <td><span class="badge bg-primary">Bien</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2020-2021</td>
+                                        <td>Seconde</td>
+                                        <td>Lycée Demo</td>
+                                        <td>14.5/20</td>
+                                        <td>5/40</td>
+                                        <td><span class="badge bg-primary">Bien</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2019-2020</td>
+                                        <td>3ème</td>
+                                        <td>Collège Liberté</td>
+                                        <td>15.0/20</td>
+                                        <td>2/42</td>
+                                        <td><span class="badge bg-success">Bien</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Documents administratifs</h6>
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-upload me-1"></i>Ajouter un document
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Document</th>
+                                        <th>Date d'ajout</th>
+                                        <th>Ajouté par</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                                            Certificat d'inscription 2022-2023
+                                        </td>
+                                        <td>15/09/2022</td>
+                                        <td>Secrétariat</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fas fa-file-image text-primary me-2"></i>
+                                            Copie de la carte d'identité
+                                        </td>
+                                        <td>10/09/2022</td>
+                                        <td>Secrétariat</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                                            Certificat médical (absences du 05/05/2023)
+                                        </td>
+                                        <td>06/05/2023</td>
+                                        <td>Mme BALDE (CPE)</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fas fa-file-word text-primary me-2"></i>
+                                            Fiche d'orientation
+                                        </td>
+                                        <td>20/04/2023</td>
+                                        <td>M. TOURE (Proviseur)</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Graphique d'évolution des résultats
+            const progressChart = document.getElementById('studentProgressChart');
+            if (progressChart) {
+                new Chart(progressChart, {
+                    type: 'line',
+                    data: {
+                        labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Fev', 'Mar', 'Avr', 'Mai'],
+                        datasets: [{
+                            label: 'Moyenne générale',
+                            data: [14.2, 14.5, 14.8, 15.0, 14.9, 15.2, 15.0, 15.5, 15.8],
+                            borderColor: 'rgba(78, 115, 223, 1)',
+                            backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                min: 10,
+                                max: 20
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

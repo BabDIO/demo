@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Démonstration - Système de Gestion Scolaire</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color) 0%, #224abe 100%);
+            min-height: 100vh;
+            transition: all 0.3s;
+            color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1rem;
+            transition: all 0.2s;
+            border-radius: 0.25rem;
+            margin: 0.2rem 0;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+        
+        .sidebar .nav-divider {
+            margin: 0.5rem 1rem;
+            border-top-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .main-content {
+            transition: all 0.3s;
+        }
+        
+        .navbar {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            background-color: white;
+        }
+        
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 0.35rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .premium-card {
+            border-left: 0.25rem solid var(--warning-color);
+        }
+        
+        .stats-card {
+            border-left: 0.25rem solid var(--primary-color);
+        }
+        
+        .stats-card.success {
+            border-left: 0.25rem solid var(--secondary-color);
+        }
+        
+        .stats-card.warning {
+            border-left: 0.25rem solid var(--warning-color);
+        }
+        
+        .stats-card.info {
+            border-left: 0.25rem solid var(--info-color);
+        }
+        
+        .content-wrapper {
+            padding: 1.5rem;
+        }
+        
+        .border-left-primary {
+            border-left: 4px solid var(--primary-color) !important;
+        }
+        
+        .border-left-success {
+            border-left: 4px solid var(--secondary-color) !important;
+        }
+        
+        .border-left-warning {
+            border-left: 4px solid var(--warning-color) !important;
+        }
+        
+        .page-title {
+            color: #5a5c69;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab-content {
+            padding: 1.5rem;
+            background-color: white;
+        }
+        
+        .demo-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s;
+        }
+        
+        .photo-card {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .student-photo {
+            height: 150px;
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .student-photo img {
+            max-height: 100%;
+            max-width: 100%;
+        }
+        
+        .student-info {
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .student-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .student-id {
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .card-scolaire {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-scolaire.blue {
+            background: linear-gradient(to bottom, #f5f9ff, #ffffff);
+        }
+        
+        .card-scolaire.gray {
+            background: linear-gradient(to bottom, #f5f5f5, #ffffff);
+        }
+        
+        .header-section {
+            display: flex;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .school-header {
+            flex-grow: 1;
+            padding: 0 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .school-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .school-contact {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .mali-flag {
+            width: 30px;
+            height: 20px;
+            background: linear-gradient(to right, #14b53a 33.33%, #fcd116 33.33%, #fcd116 66.66%, #ce1126 66.66%);
+            margin: auto 0;
+        }
+        
+        .identity-section {
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .identity-title {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        
+        .student-section {
+            display: flex;
+            padding: 10px;
+        }
+        
+        .student-photo {
+            width: 80px;
+            height: 100px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        
+        .student-photo img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .student-info {
+            flex-grow: 1;
+        }
+        
+        .student-info p {
+            margin: 5px 0;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        
+        .qr-code {
+            width: 80px;
+            height: 80px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .qr-code img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .card-footer {
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            font-size: 10px;
+            color: #666;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .website {
+            font-weight: bold;
+        }
+        
+        .premium-link {
+            color: #495057;
+            text-decoration: none;
+            border-radius: 0.35rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s;
+            display: block;
+        }
+        
+        .premium-link:hover {
+            background-color: #fef3c7;
+            color: #78350f !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .premium-link i {
+            color: #f59e0b;
+        }
+        
+        .premium-link:hover i {
+            color: #d97706;
+        }
+        
+        /* Animation pour les cartes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        /* Style pour le tableau d'emploi du temps */
+        .timetable-grid th, .timetable-grid td {
+            min-width: 120px;
+            height: 50px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        
+        .timetable-slot {
+            background-color: #f8f9fc;
+            border-radius: 4px;
+            padding: 0.25rem;
+            margin: 0.1rem;
+            border: 1px solid #e3e6f0;
+        }
+        
+        .timetable-matiere {
+            font-weight: 600;
+            color: #4e73df;
+        }
+        
+        .timetable-prof {
+            font-size: 0.8rem;
+            color: #5a5c69;
+        }
+        
+        .timetable-salle {
+            font-size: 0.75rem;
+            color: #858796;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse p-0">
+                <div class="position-sticky">
+                    <div class="text-center my-4">
+                        <h4 class="text-white">LYCÉE DEMO</h4>
+                    </div>
+                    <ul class="nav nav-sidebar flex-column">
+                        <li class="nav-item">
+                            <a href="demo_marketing.html" class="nav-link active">
+                                <i class="fas fa-fw fa-tachometer-alt me-2"></i>Tableau de bord
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="eleves_details_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-user-graduate me-2"></i>Élèves
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="classes_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-chalkboard me-2"></i>Classes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="professeurs_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-chalkboard-teacher me-2"></i>Professeurs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="examens_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-chart-line me-2"></i>Notes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="emploi_temps_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-calendar-alt me-2"></i>Emploi du temps
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="cartes_scolaires_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-id-card me-2"></i>Cartes scolaires
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="finance_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-money-bill-wave me-2"></i>Finance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="communication_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-comments me-2"></i>Communication
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="certificates-content">
+                                <i class="fas fa-fw fa-certificate me-2"></i>Certificats
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="absences_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-user-clock me-2"></i>Absences
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="bulletin_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-file-alt me-2"></i>Bulletins
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="examens_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-tasks me-2"></i>Examens
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="emploi_temps_demo.html" class="nav-link">
+                                <i class="fas fa-fw fa-calendar-alt me-2"></i>Emploi du temps
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="col-md-9 col-lg-10 ms-sm-auto main-content">
+                <!-- Top Navbar -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4">
+                    <div class="container-fluid">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".sidebar">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <span class="d-block d-md-none">LYCÉE DEMO</span>
+                        <div class="d-flex">
+                            <div class="dropdown">
+                                <a class="btn btn-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user me-2"></i>Admin Démo
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2"></i>Paramètres</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Déconnexion</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Page Content -->
+                <div class="container-fluid">
+                    <!-- Dashboard Section -->
+                    <div class="content-section active" id="dashboard-content">
+                        <h1 class="page-title"><i class="fas fa-tachometer-alt me-2"></i>Tableau de bord</h1>
+                        
+                        <div class="row">
+                            <!-- Stats Cards -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card stats-card h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Élèves inscrits</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">875</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-user-graduate fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card stats-card success h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                    Taux de réussite</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">82%</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card stats-card warning h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Classes</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">24</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-chalkboard fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card stats-card info h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                    Enseignants</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">42</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Chart -->
+                            <div class="col-lg-8">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Répartition des élèves par filière</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-area">
+                                            <canvas id="elevesChart" style="height: 250px;"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Recent Activity -->
+                            <div class="col-lg-4">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Activités récentes</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item px-0">
+                                                <div class="d-flex">
+                                                    <div class="me-3">
+                                                        <i class="fas fa-user-plus text-success"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0">5 nouveaux élèves inscrits</p>
+                                                        <small class="text-muted">Il y a 2 heures</small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item px-0">
+                                                <div class="d-flex">
+                                                    <div class="me-3">
+                                                        <i class="fas fa-file-alt text-info"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0">Bulletins du 1er trimestre générés</p>
+                                                        <small class="text-muted">Il y a 1 jour</small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item px-0">
+                                                <div class="d-flex">
+                                                    <div class="me-3">
+                                                        <i class="fas fa-calendar-check text-warning"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0">Planning des examens mis à jour</p>
+                                                        <small class="text-muted">Il y a 3 jours</small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item px-0">
+                                                <div class="d-flex">
+                                                    <div class="me-3">
+                                                        <i class="fas fa-chalkboard text-primary"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0">Nouvelle classe ajoutée : TAL 3</p>
+                                                        <small class="text-muted">Il y a 1 semaine</small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Access -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="m-0 font-weight-bold text-primary">Accès rapide</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-6 mb-3">
+                                                <a href="eleves_details_demo.html" class="card text-center p-3 h-100 menu-link" onclick="window.location='eleves_details_demo.html'; return false;">
+                                                    <i class="fas fa-user-graduate fa-3x mb-3 text-primary"></i>
+                                                    <h5>Gestion des élèves</h5>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 mb-3">
+                                                <a href="professeurs_demo.html" class="card text-center p-3 h-100 menu-link">
+                                                    <i class="fas fa-chalkboard-teacher fa-3x mb-3 text-info"></i>
+                                                    <h5>Gestion des professeurs</h5>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 mb-3">
+                                                <a href="classes_demo.html" class="card text-center p-3 h-100 menu-link">
+                                                    <i class="fas fa-chalkboard fa-3x mb-3 text-danger"></i>
+                                                    <h5>Gestion des classes</h5>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 mb-3">
+                                                <a href="finance_demo.html" class="card text-center p-3 h-100 menu-link">
+                                                    <i class="fas fa-money-bill-wave fa-3x mb-3 text-success"></i>
+                                                    <h5>Gestion financière</h5>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 mb-3">
+                                                <a href="examens_demo.html" class="card text-center p-3 h-100 menu-link">
+                                                    <i class="fas fa-chart-line fa-3x mb-3 text-warning"></i>
+                                                    <h5>Gestion des notes</h5>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 mb-3">
+                                                <a href="emploi_temps_demo.html" class="card text-center p-3 h-100 menu-link">
+                                                    <i class="fas fa-calendar-alt fa-3x mb-3 text-success"></i>
+                                                    <h5>Emplois du temps</h5>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Eleves Section -->
+                    <div class="content-section" id="students-content">
+                        <h1 class="page-title"><i class="fas fa-user-graduate me-2"></i>Gestion des élèves</h1>
+                        
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="m-0 font-weight-bold text-primary">Liste des élèves</h6>
+                                <div>
+                                    <a href="inscriptions_demo.html" class="btn btn-success btn-sm me-2">
+                                        <i class="fas fa-user-plus me-1"></i>Inscrire
+                                    </a>
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="fas fa-filter me-1"></i>Filtrer
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 mb-2">
+                                            <select class="form-select">
+                                                <option>Toutes les classes</option>
+                                                <option>Terminale A</option>
+                                                <option>Terminale B</option>
+                                                <option>Terminale C</option>
+                                                <option>Terminale D</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <select class="form-select">
+                                                <option>2023-2024</option>
+                                                <option>2022-2023</option>
+                                                <option>2021-2022</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Rechercher un élève...">
+                                                <button class="btn btn-primary">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <table class="table table-bordered table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Matricule</th>
+                                                <th>Nom</th>
+                                                <th>Prénom</th>
+                                                <th>Date de naissance</th>
+                                                <th>Classe</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>MAM2023001</td>
+                                                <td>DIALLO</td>
+                                                <td>Amadou</td>
+                                                <td>15/03/2006</td>
+                                                <td>Terminale A</td>
+                                                <td>
+                                                    <a href="eleves_details_demo.html" class="btn btn-sm btn-info me-1" title="Voir">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>MAM2023002</td>
+                                                <td>TRAORE</td>
+                                                <td>Fatoumata</td>
+                                                <td>23/07/2005</td>
+                                                <td>Terminale A</td>
+                                                <td>
+                                                    <a href="eleves_details_demo.html" class="btn btn-sm btn-info me-1" title="Voir">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>MAM2023003</td>
+                                                <td>KEITA</td>
+                                                <td>Ibrahim</td>
+                                                <td>05/11/2006</td>
+                                                <td>Terminale B</td>
+                                                <td>
+                                                    <a href="eleves_details_demo.html" class="btn btn-sm btn-info me-1" title="Voir">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>MAM2023004</td>
+                                                <td>CAMARA</td>
+                                                <td>Seydou</td>
+                                                <td>18/02/2006</td>
+                                                <td>Terminale B</td>
+                                                <td>
+                                                    <a href="eleves_details_demo.html" class="btn btn-sm btn-info me-1" title="Voir">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>MAM2023005</td>
+                                                <td>TOURE</td>
+                                                <td>Mariam</td>
+                                                <td>30/09/2006</td>
+                                                <td>Terminale C</td>
+                                                <td>
+                                                    <a href="eleves_details_demo.html" class="btn btn-sm btn-info me-1" title="Voir">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    <nav aria-label="Pagination">
+                                        <ul class="pagination justify-content-center">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Précédent</a>
+                                            </li>
+                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">Suivant</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classes Section -->
+                    <div class="content-section" id="classes-content">
+                        <h1 class="page-title"><i class="fas fa-chalkboard me-2"></i>Classes et filières</h1>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="m-0 font-weight-bold text-primary">Classes</h6>
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus me-1"></i>Ajouter
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Nom de la classe</th>
+                                                        <th>Filière</th>
+                                                        <th>Nombre d'élèves</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Terminale A</td>
+                                                        <td>Lettres</td>
+                                                        <td>35</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-info me-1" title="Voir">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Terminale B</td>
+                                                        <td>Sciences Économiques</td>
+                                                        <td>28</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-info me-1" title="Voir">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Terminale C</td>
+                                                        <td>Sciences Mathématiques</td>
+                                                        <td>32</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-info me-1" title="Voir">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="m-0 font-weight-bold text-primary">Filières</h6>
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus me-1"></i>Ajouter
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Code</th>
+                                                        <th>Nom</th>
+                                                        <th>Description</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>LTR</td>
+                                                        <td>Lettres</td>
+                                                        <td>Filière littéraire</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>ECO</td>
+                                                        <td>Sciences Économiques</td>
+                                                        <td>Filière économique</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>MAT</td>
+                                                        <td>Sciences Mathématiques</td>
+                                                        <td>Filière scientifique</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-primary me-1" title="Modifier">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes Section -->
+                    <div class="content-section" id="notes-content">
+                        <h1 class="page-title"><i class="fas fa-graduation-cap me-2"></i>Gestion des notes</h1>
+                        
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Saisie des notes</h5>
+                            </div>
+                            <div class="card-body">
+                                <form class="row g-3 mb-4">
+                                    <div class="col-md-3">
+                                        <label for="noteClasse" class="form-label">Classe</label>
+                                        <select class="form-select" id="noteClasse">
+                                            <option selected>Choisir...</option>
+                                            <option>Terminale A</option>
+                                            <option>Terminale B</option>
+                                            <option>Terminale C</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="noteMatiere" class="form-label">Matière</label>
+                                        <select class="form-select" id="noteMatiere">
+                                            <option selected>Choisir...</option>
+                                            <option>Mathématiques</option>
+                                            <option>Français</option>
+                                            <option>Physique-Chimie</option>
+                                            <option>Histoire-Géographie</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="notePeriode" class="form-label">Période</label>
+                                        <select class="form-select" id="notePeriode">
+                                            <option selected>Choisir...</option>
+                                            <option>1er trimestre</option>
+                                            <option>2ème trimestre</option>
+                                            <option>3ème trimestre</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="noteType" class="form-label">Type d'évaluation</label>
+                                        <select class="form-select" id="noteType">
+                                            <option selected>Choisir...</option>
+                                            <option>Devoir surveillé</option>
+                                            <option>Interrogation</option>
+                                            <option>Composition</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 text-end">
+                                        <button type="button" class="btn btn-primary" id="rechercherBtn">
+                                            <i class="fas fa-search me-1"></i>Rechercher
+                                        </button>
+                                    </div>
+                                </form>
+                                
+                                <div class="table-responsive mt-4">
+                                    <table class="table table-bordered" id="notesTable" style="display: none;">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Matricule</th>
+                                                <th>Nom</th>
+                                                <th>Prénom</th>
+                                                <th>Note (/20)</th>
+                                                <th>Appréciation</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>MAM2023001</td>
+                                                <td>DIALLO</td>
+                                                <td>Amadou</td>
+                                                <td><input type="number" class="form-control form-control-sm" value="15" min="0" max="20"></td>
+                                                <td><input type="text" class="form-control form-control-sm" value="Bon travail, continue ainsi."></td>
+                                            </tr>
+                                            <tr>
+                                                <td>MAM2023002</td>
+                                                <td>TRAORE</td>
+                                                <td>Fatoumata</td>
+                                                <td><input type="number" class="form-control form-control-sm" value="17" min="0" max="20"></td>
+                                                <td><input type="text" class="form-control form-control-sm" value="Excellent travail."></td>
+                                            </tr>
+                                            <tr>
+                                                <td>MAM2023003</td>
+                                                <td>KEITA</td>
+                                                <td>Ibrahim</td>
+                                                <td><input type="number" class="form-control form-control-sm" value="12" min="0" max="20"></td>
+                                                <td><input type="text" class="form-control form-control-sm" value="Des efforts à poursuivre."></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    <div class="text-end mt-3">
+                                        <a href="bulletin_demo.html" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>Voir bulletin
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Bulletins de notes</h5>
+                            </div>
+                            <div class="card-body">
+                                <form class="row g-3 mb-4">
+                                    <div class="col-md-4">
+                                        <label for="bulletinClasse" class="form-label">Classe</label>
+                                        <select class="form-select" id="bulletinClasse">
+                                            <option selected>Choisir...</option>
+                                            <option>Terminale A</option>
+                                            <option>Terminale B</option>
+                                            <option>Terminale C</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="bulletinPeriode" class="form-label">Période</label>
+                                        <select class="form-select" id="bulletinPeriode">
+                                            <option selected>Choisir...</option>
+                                            <option>1er trimestre</option>
+                                            <option>2ème trimestre</option>
+                                            <option>3ème trimestre</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="bulletinEleve" class="form-label">Élève (optionnel)</label>
+                                        <select class="form-select" id="bulletinEleve">
+                                            <option selected>Tous les élèves</option>
+                                            <option>DIALLO Amadou</option>
+                                            <option>TRAORE Fatoumata</option>
+                                            <option>KEITA Ibrahim</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 text-end">
+                                        <button type="button" class="btn btn-primary" id="genererBulletinsBtn">
+                                            <i class="fas fa-file-pdf me-1"></i>Générer les bulletins
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication Section -->
+                    <div class="content-section" id="communication-content">
+                        <h1 class="page-title"><i class="fas fa-envelope me-2"></i>Centre de Communication</h1>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Menu Communication</h5>
+                                    </div>
+                                    <div class="list-group list-group-flush">
+                                        <a href="#" class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center">
+                                            <div><i class="fas fa-inbox me-2"></i>Messagerie</div>
+                                            <span class="badge bg-danger rounded-pill">3</span>
+                                        </a>
+                                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            <div><i class="fas fa-bullhorn me-2"></i>Annonces</div>
+                                            <span class="badge bg-warning rounded-pill">2</span>
+                                        </a>
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <i class="fas fa-clipboard-list me-2"></i>Tableaux d'affichage
+                                        </a>
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <i class="fas fa-certificate me-2"></i>Certificats
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0"><i class="fas fa-inbox me-2"></i>Messagerie</h5>
+                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#composeModal">
+                                            <i class="fas fa-plus me-1"></i>Nouveau message
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade show active">
+                                                <div class="list-group message-list">
+                                                    <a href="#" class="list-group-item list-group-item-action unread">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h6 class="mb-1 fw-bold">Administration</h6>
+                                                            <small class="text-muted">Hier</small>
+                                                        </div>
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <p class="mb-1 text-truncate"><strong>Réunion des parents d'élèves</strong> - Nous vous rappelons que la réunion des parents d'élèves aura lieu ce vendredi à 16h dans la salle polyvalente.</p>
+                                                            <span class="badge bg-danger rounded-pill">Nouveau</span>
+                                                        </div>
+                                                    </a>
+                                                    <a href="#" class="list-group-item list-group-item-action unread">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h6 class="mb-1 fw-bold">M. DIAKITE (Mathématiques)</h6>
+                                                            <small class="text-muted">13/05/2023</small>
+                                                        </div>
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <p class="mb-1 text-truncate"><strong>Devoir à rendre</strong> - Bonjour à tous, n'oubliez pas de me rendre le devoir de mathématiques pour lundi prochain.</p>
+                                                            <span class="badge bg-danger rounded-pill">Nouveau</span>
+                                                        </div>
+                                                    </a>
+                                                    <a href="#" class="list-group-item list-group-item-action unread">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h6 class="mb-1 fw-bold">Service Scolarité</h6>
+                                                            <small class="text-muted">10/05/2023</small>
+                                                        </div>
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <p class="mb-1 text-truncate"><strong>Bulletins du 2ème trimestre</strong> - Les bulletins du 2ème trimestre sont disponibles au secrétariat.</p>
+                                                            <span class="badge bg-danger rounded-pill">Nouveau</span>
+                                                        </div>
+                                                    </a>
+                                                    <a href="#" class="list-group-item list-group-item-action">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h6 class="mb-1">Mme COULIBALY (Français)</h6>
+                                                            <small class="text-muted">05/05/2023</small>
+                                                        </div>
+                                                        <p class="mb-1 text-truncate"><strong>Préparation à l'examen</strong> - Chers élèves, je vous propose une séance de révision supplémentaire jeudi après les cours.</p>
+                                                    </a>
+                                                    <a href="#" class="list-group-item list-group-item-action">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <h6 class="mb-1">Centre d'examens</h6>
+                                                            <small class="text-muted">28/04/2023</small>
+                                                        </div>
+                                                        <p class="mb-1 text-truncate"><strong>Convocations aux examens</strong> - Les convocations pour le Baccalauréat sont disponibles.</p>
+                                                    </a>
+                                                </div>
+                                                
+                                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                                    <div>
+                                                        <button class="btn btn-sm btn-outline-danger me-2">
+                                                            <i class="fas fa-trash me-1"></i>Supprimer
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-secondary">
+                                                            <i class="fas fa-check-double me-1"></i>Marquer comme lu
+                                                        </button>
+                                                    </div>
+                                                    <nav aria-label="Pagination">
+                                                        <ul class="pagination pagination-sm mb-0">
+                                                            <li class="page-item disabled">
+                                                                <a class="page-link" href="#" tabindex="-1">Précédent</a>
+                                                            </li>
+                                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#">Suivant</a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Annonces récentes</h5>
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus me-1"></i>Nouvelle annonce
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="card mb-3 border-left-primary">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Examens blanc - 2ème trimestre</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">Publié le 15/05/2023 par Administration</h6>
+                                                <p class="card-text">
+                                                    Chers élèves, les examens blancs du 2ème trimestre se dérouleront du 29 mai au 2 juin 2023.
+                                                    Le planning détaillé sera affiché la semaine prochaine sur les tableaux d'affichage.
+                                                    Bonne préparation à tous !
+                                                </p>
+                                                <div class="text-end">
+                                                    <a href="#" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye me-1"></i>Voir plus
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card mb-3 border-left-warning">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Rappel: Date limite d'inscription</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">Publié le 05/05/2023 par Secrétariat</h6>
+                                                <p class="card-text">
+                                                    Nous rappelons à tous les élèves que la date limite pour les inscriptions aux examens est fixée au 15 mai.
+                                                    Veuillez vous présenter au secrétariat avec tous les documents requis.
+                                                </p>
+                                                <div class="text-end">
+                                                    <a href="#" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye me-1"></i>Voir plus
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Certificats Section -->
+                    <div class="content-section" id="certificates-content">
+                        <h1 class="page-title"><i class="fas fa-certificate me-2"></i>Certificats & Documents</h1>
+                        
+                        <div class="row mb-4">
+                            <div class="col-lg-4">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Générer un certificat</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label for="certType" class="form-label">Type de certificat</label>
+                                                <select class="form-select" id="certType">
+                                                    <option>Certificat de scolarité</option>
+                                                    <option>Attestation de réussite</option>
+                                                    <option>Attestation de présence</option>
+                                                    <option>Relevé de notes</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="certEleve" class="form-label">Élève</label>
+                                                <select class="form-select" id="certEleve">
+                                                    <option>Sélectionner un élève...</option>
+                                                    <option>KOUYATE Mamadou (MAM2023001)</option>
+                                                    <option>DIALLO Aminata (MAM2023002)</option>
+                                                    <option>CISSE Ibrahim (MAM2023003)</option>
+                                                    <option>KEITA Fatoumata (MAM2023004)</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="certDate" class="form-label">Date</label>
+                                                <input type="date" class="form-control" id="certDate" value="2023-05-17">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="certObjet" class="form-label">Objet / Utilisation</label>
+                                                <input type="text" class="form-control" id="certObjet" placeholder="Ex: Pour dossier universitaire">
+                                            </div>
+                                            <div class="text-center">
+                                                <button type="button" class="btn btn-primary me-2">
+                                                    <i class="fas fa-eye me-1"></i>Aperçu
+                                                </button>
+                                                <button type="button" class="btn btn-success">
+                                                    <i class="fas fa-download me-1"></i>Générer PDF
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-8">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Historique des certificats</h5>
+                                        <button class="btn btn-light btn-sm">
+                                            <i class="fas fa-file-export me-1"></i>Exporter
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <h5>Certificats et documents</h5>
+                                            <a href="certificat_demo.html" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-plus me-1"></i>Nouveau certificat
+                                            </a>
+                                        </div>
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>N° Certificat</th>
+                                                        <th>Type</th>
+                                                        <th>Élève</th>
+                                                        <th>Classe</th>
+                                                        <th>Date génération</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>CERT-2023-0125</td>
+                                                        <td>Certificat de scolarité</td>
+                                                        <td>DIALLO Aminata</td>
+                                                        <td>Terminale A</td>
+                                                        <td>15/05/2023</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-info me-1" title="Voir">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-success me-1" title="Télécharger">
+                                                                <i class="fas fa-download"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>CERT-2023-0124</td>
+                                                        <td>Attestation de réussite</td>
+                                                        <td>KOUYATE Mamadou</td>
+                                                        <td>Terminale A</td>
+                                                        <td>14/05/2023</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-info me-1" title="Voir">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-success me-1" title="Télécharger">
+                                                                <i class="fas fa-download"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>CERT-2023-0123</td>
+                                                        <td>Relevé de notes</td>
+                                                        <td>CISSE Ibrahim</td>
+                                                        <td>Terminale C</td>
+                                                        <td>12/05/2023</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-info me-1" title="Voir">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-success me-1" title="Télécharger">
+                                                                <i class="fas fa-download"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Supprimer">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <nav aria-label="Pagination">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item disabled">
+                                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Précédent</a>
+                                                </li>
+                                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="#">Suivant</a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Aperçu du certificat</h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="certificate-preview bg-white border p-4">
+                                            <div class="text-center mb-4">
+                                                <h4 class="text-uppercase mb-1">LYCÉE DEMO</h4>
+                                                <p class="mb-1">Avenue de la République, Bamako, Mali</p>
+                                                <p class="small">Tel: +223 20 22 33 44 | Email: contact@lyceemamadousarr.edu.ml</p>
+                                                <hr class="my-2">
+                                                <h5 class="text-uppercase mt-3">CERTIFICAT DE SCOLARITÉ</h5>
+                                                <p class="mb-0">N° CERT-2023-0125</p>
+                                            </div>
+                                            
+                                            <div class="mb-4">
+                                                <p>Je soussigné, <strong>M. TOURÉ Amadou</strong>, Proviseur du Lycée Demo, certifie que :</p>
+                                                
+                                                <div class="student-info bg-light p-3 my-3">
+                                                    <p class="mb-2"><strong>L'élève</strong> : DIALLO Aminata</p>
+                                                    <p class="mb-2"><strong>Né(e) le</strong> : 15/03/2005 à Bamako</p>
+                                                    <p class="mb-2"><strong>Matricule</strong> : MAM2023002</p>
+                                                    <p class="mb-0"><strong>Est inscrit(e) en classe de</strong> : Terminale A pour l'année scolaire 2022-2023</p>
+                                                </div>
+                                                
+                                                <p>Ce certificat est délivré à l'intéressé(e) pour servir et valoir ce que de droit.</p>
+                                            </div>
+                                            
+                                            <div class="text-end mt-5">
+                                                <p>Fait à Bamako, le 15/05/2023</p>
+                                                <p class="mb-1">Le Proviseur,</p>
+                                                <img src="https://via.placeholder.com/150x60" alt="Signature" class="img-fluid mb-1" style="max-width: 150px;">
+                                                <p>M. TOURÉ Amadou</p>
+                                            </div>
+                                            
+                                            <div class="text-center mt-5">
+                                                <div class="stamp-placeholder">
+                                                    <img src="https://via.placeholder.com/100x100" alt="Cachet" class="img-fluid" style="max-width: 100px; opacity: 0.8;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript pour l'interactivité -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des sections de contenu
+            const contentSections = document.querySelectorAll('.content-section');
+            const navLinks = document.querySelectorAll('.nav-sidebar .nav-link[data-section]');
+            
+            function showSection(sectionId) {
+                // Masquer toutes les sections
+                contentSections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Afficher la section demandée
+                const sectionToShow = document.getElementById(sectionId);
+                if (sectionToShow) {
+                    sectionToShow.style.display = 'block';
+                }
+                
+                // Mettre à jour les classes active des liens
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-section') === sectionId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            // Gestionnaire d'événements pour les liens de navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+            
+            // Afficher la section tableau de bord par défaut
+            showSection('dashboard-content');
+            
+            // Initialiser les graphiques du tableau de bord
+            if (document.getElementById('elevesByClassChart')) {
+                new Chart(document.getElementById('elevesByClassChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Terminale A', 'Terminale B', 'Terminale C', 'Première A', 'Première B', 'Première C'],
+                        datasets: [{
+                            label: 'Nombre d\'élèves',
+                            data: [35, 28, 32, 38, 25, 30],
+                            backgroundColor: 'rgba(78, 115, 223, 0.8)',
+                            borderColor: 'rgba(78, 115, 223, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            if (document.getElementById('resultatsChart')) {
+                new Chart(document.getElementById('resultatsChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Très bien', 'Bien', 'Assez bien', 'Passable', 'Insuffisant'],
+                        datasets: [{
+                            data: [5, 15, 25, 35, 20],
+                            backgroundColor: [
+                                'rgba(28, 200, 138, 0.8)',
+                                'rgba(54, 185, 204, 0.8)',
+                                'rgba(78, 115, 223, 0.8)',
+                                'rgba(246, 194, 62, 0.8)',
+                                'rgba(231, 74, 59, 0.8)'
+                            ],
+                            borderColor: [
+                                'rgba(28, 200, 138, 1)',
+                                'rgba(54, 185, 204, 1)',
+                                'rgba(78, 115, 223, 1)',
+                                'rgba(246, 194, 62, 1)',
+                                'rgba(231, 74, 59, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- Menu de navigation d'urgence -->
+    <div class="fixed-bottom bg-light p-2 text-center d-md-none">
+        <div class="small mb-2">Navigation rapide:</div>
+        <div class="btn-group btn-group-sm">
+            <a href="demo_marketing.html" class="btn btn-outline-primary">Accueil</a>
+            <a href="eleves_details_demo.html" class="btn btn-outline-primary">Élèves</a>
+            <a href="classes_demo.html" class="btn btn-outline-primary">Classes</a>
+            <a href="professeurs_demo.html" class="btn btn-outline-primary">Profs</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription des Élèves - Système de Gestion Scolaire</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            background-color: white;
+        }
+        
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 0.35rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #224abe;
+            border-color: #224abe;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+        }
+        
+        .step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            width: 20px;
+            height: 2px;
+            background-color: #ddd;
+            transform: translateY(-50%);
+        }
+        
+        .step.active {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .step-number {
+            display: inline-flex;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ddd;
+            color: #666;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+        
+        .step.active .step-number {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="demo_marketing.html">
+                <i class="fas fa-school text-primary me-2"></i>
+                <span class="fw-bold">Lycée Demo</span>
+            </a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-2 d-none d-lg-inline text-gray-600 small">Admin Demo</span>
+                        <img class="img-profile rounded-circle" width="32" height="32" src="https://via.placeholder.com/32x32">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                            Profil
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
+                            Paramètres
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="login_demo.html">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                            Déconnexion
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <a href="demo_marketing.html" class="back-link mb-4">
+            <i class="fas fa-arrow-left me-1"></i>Retour à la liste des élèves
+        </a>
+        
+        <h1 class="h3 mb-4 text-gray-800">Inscription d'un nouvel élève</h1>
+        
+        <div class="step-indicator mb-4">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <div>Informations personnelles</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>Informations scolaires</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>Parents/Tuteurs</div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>Documents</div>
+            </div>
+            <div class="step">
+                <div class="step-number">5</div>
+                <div>Frais et validation</div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Étape 1: Informations personnelles</h5>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="lastName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="gender" class="form-label">Sexe</label>
+                            <select class="form-select" id="gender" required>
+                                <option value="" selected disabled>Choisir...</option>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="birthdate" class="form-label">Date de naissance</label>
+                            <input type="date" class="form-control" id="birthdate" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="birthplace" class="form-label">Lieu de naissance</label>
+                            <input type="text" class="form-control" id="birthplace" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nationality" class="form-label">Nationalité</label>
+                            <select class="form-select" id="nationality" required>
+                                <option value="" selected disabled>Choisir...</option>
+                                <option value="ML">Malienne</option>
+                                <option value="SN">Sénégalaise</option>
+                                <option value="CI">Ivoirienne</option>
+                                <option value="BF">Burkinabé</option>
+                                <option value="GN">Guinéenne</option>
+                                <option value="OTHER">Autre</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="address" class="form-label">Adresse</label>
+                            <input type="text" class="form-control" id="address" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="studentPhone" class="form-label">Téléphone (optionnel)</label>
+                            <input type="tel" class="form-control" id="studentPhone">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="studentEmail" class="form-label">Email (optionnel)</label>
+                            <input type="email" class="form-control" id="studentEmail">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="photo" class="form-label">Photo d'identité</label>
+                            <input type="file" class="form-control" id="photo">
+                            <div class="form-text">Format JPG/PNG, max 2MB</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-secondary" disabled>
+                            <i class="fas fa-arrow-left me-1"></i>Précédent
+                        </button>
+                        <button type="button" class="btn btn-primary" id="nextBtn">
+                            Suivant<i class="fas fa-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript pour la démo -->
+    <script>
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            alert('Cette démonstration simule uniquement la première étape du processus d\'inscription. Dans la version complète, vous pourriez continuer avec les informations scolaires, les coordonnées des parents, etc.');
+        });
+    </script>
+</body>
+</html> 
